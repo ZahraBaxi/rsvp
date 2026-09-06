@@ -73,7 +73,7 @@ function renderParkingCards(parking) {
       '<p class="info-card-title">' + spot.title + '</p>' +
       '<p class="info-card-address">' + spot.address + '</p>' +
       '<p class="info-card-text">' + spot.text + '</p>' +
-      (spot.mapUrl ? '<div class="info-map"><img src="' + spot.mapUrl + '" loading="lazy" alt="Map of ' + spot.title + '"></div>' : '') +
+      (spot.mapUrl ? '<div class="info-map"><iframe src="' + spot.mapUrl + '" loading="lazy" title="Map of ' + spot.title + '"></iframe></div>' : '') +
       (spot.googleMapsUrl ? '<a class="info-link info-link--pin" href="' + spot.googleMapsUrl + '" target="_blank" rel="noopener">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-7.58-7-12a7 7 0 0 1 14 0c0 4.42-7 12-7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>' +
         'view on Google Maps</a>' : '') +
