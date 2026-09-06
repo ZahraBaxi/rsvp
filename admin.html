@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP admin — Home Sweet Home</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+<script src="back4app-client.js" defer></script>
+<script src="admin.js" defer></script>
+</head>
+<body class="admin-body">
+
+  <!-- ============ LOGIN VIEW ============ -->
+  <main class="card" id="view-login">
+    <p class="eyebrow">hosts only</p>
+    <h1 class="title title--small">RSVP admin</h1>
+    <p class="subtitle">log in with your Back4App account to see who's coming</p>
+
+    <form id="login-form">
+      <label class="field">
+        <span class="field-label">username</span>
+        <input type="text" id="login-username" autocomplete="username" required>
+      </label>
+      <label class="field">
+        <span class="field-label">password</span>
+        <input type="password" id="login-password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="btn btn-primary" id="login-btn">log in</button>
+      <p class="form-error" id="login-error" hidden></p>
+    </form>
+  </main>
+
+  <!-- ============ DASHBOARD VIEW ============ -->
+  <main class="dashboard" id="view-dashboard" hidden>
+    <header class="dashboard-header">
+      <div>
+        <p class="eyebrow">housewarming</p>
+        <h1 class="title title--small">who's signed up</h1>
+      </div>
+      <button class="btn-back" id="logout-btn">log out</button>
+    </header>
+
+    <section class="stats" id="stats"></section>
+
+    <!-- ---------- responses table ---------- -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">responses</h2>
+        <div class="panel-actions">
+          <button class="btn btn-secondary btn-inline" id="copy-emails-btn">copy emails</button>
+          <button class="btn btn-secondary btn-inline" id="refresh-btn">refresh</button>
+        </div>
+      </div>
+      <p class="panel-note" id="copy-emails-note" hidden></p>
+
+      <div class="table-wrap">
+        <table class="rsvp-table" id="rsvp-table">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>email</th>
+              <th>coming?</th>
+              <th>guests</th>
+              <th>notes</th>
+              <th>submitted</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rsvp-tbody">
+            <tr><td colspan="7" class="empty-row">loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

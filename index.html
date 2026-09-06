@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Sweet Home — Housewarming RSVP</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Almendra+Display&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="back4app-client.js" defer></script>
+<script src="scripts.js" defer></script>
+</head>
+<body>
+
+  <main class="card" id="card">
+
+    <!-- ============ HOME / LETTER VIEW ============ -->
+    <section class="view view--home" id="view-home">
+      <p class="eyebrow">you've got mail</p>
+      <div class="envelope-frame" id="envelope-illustration" role="button" tabindex="0" aria-label="Open your invitation">
+        <img src="envelope.png" alt="Envelope illustration">
+      </div>
+      <p class="envelope-hint">tap to open</p>
+    </section>
+
+    <!-- ============ PASSWORD GATE ============ -->
+    <section class="view view--password" id="view-password" hidden>
+      <p class="eyebrow">this one's locked</p>
+      <h2 class="title title--small">enter the password</h2>
+      <p class="subtitle">sent to you by text or email — ask Zahra if you can't find it</p>
+      <form id="password-form">
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input type="password" name="password" id="party-password" placeholder="•••••••••" autocomplete="off" required>
+        </label>
+        <button type="submit" class="btn btn-primary" id="btn-unlock">Unlock Invite</button>
+        <p class="form-error" id="password-error" hidden>hmm, that's not it — try again.</p>
+      </form>
+    </section>
+
+    <!-- ============ INVITE VIEW ============ -->
+    <section class="view view--invite" id="view-invite" hidden>
+      <p class="script-line">please join for a</p>
+      <h1 class="headline">Housewarming</h1>
+      <p class="script-line script-line--sub">at zahra's new place</p>
+
+      <div class="illustration-slot" id="illustration-slot">
+        <img src="illustration.png" alt="Hand-drawn illustration" id="illustration-img">
+        <div class="illustration-placeholder" id="illustration-placeholder" hidden>
+          <span class="plus">+</span>
+          <p>add your illustration</p>
+          <p class="hint">drop a file named illustration.png in this folder — furry friends gathering, anything you like</p>
+        </div>
+      </div>
+
+      <div class="invite-details">
+        <p class="venue" id="venue-text">loading…</p>
+        <p class="address" id="address-text"></p>
+        <p class="datetime" id="datetime-text"></p>
+      </div>
+
+      <p class="note">a vegan fall themed main dish will be served! feel free to bring an appetizers to share! vegetarian is perferred.</p>
+
+      <button class="btn btn-primary" id="btn-show-form">Count Me In</button>
+    </section>
+
+    <!-- ============ FORM VIEW ============ -->
+    <section class="view view--form" id="view-form" hidden>
+      <button class="btn-back" id="btn-back" aria-label="Back to invite">&larr; back</button>
+      <h2 class="title title--small">answer RSVP</h2>
+
+      <form id="rsvp-form" novalidate>
+        <label class="field">
+          <span class="field-label">Your Name</span>
+          <input type="text" name="name" id="name" placeholder="e.g. Bilbo Baggins" required>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Your Email</span>
+          <input type="email" name="email" id="email" placeholder="bilbo.of.the.shire@example.com">
+          <span class="field-hint">for contact in case anything about the party changes</span>
+        </label>
+
+        <fieldset class="field">
+          <legend class="field-label">Will You Be There?</legend>
+          <div class="toggle-group" id="attending-group" role="radiogroup">
+            <button type="button" class="toggle-btn" data-value="yes">Yes! Count Me In!</button>
+            <button type="button" class="toggle-btn" data-value="no">Sorry Can't Make It!</button>
+          </div>
+          <input type="hidden" name="attending" id="attending" required>
+        </fieldset>
+
+        <label class="field" id="guests-field">
+          <span class="field-label">How Many Guests (incl. you)?</span>
+          <div class="stepper">
+            <button type="button" class="stepper-btn" id="guests-minus" aria-label="Decrease guests">−</button>
+            <span class="stepper-value" id="guests-value">1</span>
+            <button type="button" class="stepper-btn" id="guests-plus" aria-label="Increase guests">+</button>
+          </div>
+          <input type="hidden" name="guests" id="guests" value="1">
+        </label>
+
+        <label class="field">
+          <span class="field-label">Anything to Note?</span>
+          <textarea name="notes" id="notes" placeholder="Dietary restrictions , allergies, or just want to say hi!" rows="3"></textarea>
+        </label>
+
+        <button type="submit" class="btn btn-primary" id="btn-submit">SEND IT IN!</button>
+        <p class="form-error" id="form-error" hidden>oops — pick a name and let me know if you're coming.</p>
+      </form>
+    </section>
+
+    <!-- ============ THANK YOU VIEW ============ -->
+    <section class="view view--thanks" id="view-thanks" hidden>
+      <div class="thanks-mark" id="thanks-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg></div>
+      <h2 class="title title--small" id="thanks-title">see you there</h2>
+      <p class="subtitle" id="thanks-subtitle">can't wait to show you around the new place</p>
+
+      <div class="thanks-extra" id="thanks-extra" hidden>
+        <details class="info-accordion">
+          <summary>parking options</summary>
+          <div class="info-content">
+            <p class="info-warning">PLEASE DO NOT PARK IN OUR APARTMENT'S PARKING LOT! These are numbered and given to selected residents in the complex who pay extra for them. Please see below for my recommendations on parking, both paid and unpaid!</p>
+            <div id="parking-cards"></div>
+          </div>
+        </details>
+
+        <details class="info-accordion">
+          <summary>getting inside</summary>
+          <div class="info-content">
+            <p class="info-card-text">The building is gated, so I'll need to come down and let you in. Please call or text me when you get there.</p>
+            <p class="info-phone" id="phone-text">loading…</p>
+          </div>
+        </details>
+
+        <details class="info-accordion">
+          <summary>good to know</summary>
+          <div class="info-content">
+            <ul class="info-list">
+              <li>bring an appetizer to share if you'd like. to make sure everyone can enjoy please consider vegetarian and non-alcoholic options if possible.</li>
+              <li>street parking nearby is limited, so carpooling helps! if you need help knowing who to carpool with i can connect you with people who may be heading from the same direction.</li>
+              <li>text/call when you're close so the gate's ready for you</li>
+              <li>please note this is a shoes-off household. wear something easy to slip on and off!</li>
+              <li>consider bringing a chair/stool if you would like to sit at the dining table. my apartment is a small studio and i have a limited amount of chairs/seating to share.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
