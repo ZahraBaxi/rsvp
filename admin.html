@@ -81,8 +81,42 @@
   </main>
 
   <footer class="site-footer">
-    <a href="https://www.zahrabaxi.com/" target="_blank" rel="noopener" class="footer-byline-name">made with ♥ by zahra baxi</a>
+    <button type="button" class="footer-byline-name" id="colophon-trigger">made with ♥ by zahra baxi</button>
   </footer>
+
+  <div class="colophon-overlay" id="colophon-overlay" hidden>
+    <div class="colophon-box">
+      <button type="button" class="colophon-close" id="colophon-close" aria-label="Close">&times;</button>
+      <p class="eyebrow">colophon</p>
+      <h2 class="title title--small">how this was made</h2>
+      <ul class="colophon-list">
+        <li>
+          <strong>made by</strong>
+          <a href="https://www.zahrabaxi.com/" target="_blank" rel="noopener">Zahra Baxi</a>
+        </li>
+        <li>
+          <strong>built with</strong>
+          plain <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener">HTML</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener">CSS</a> &amp; <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a> — no frameworks
+        </li>
+        <li>
+          <strong>data &amp; RSVPs</strong>
+          stored with <a href="https://www.back4app.com/" target="_blank" rel="noopener">Back4App</a>, a hosted Parse Server backend
+        </li>
+        <li>
+          <strong>kept out of the public repo</strong>
+          using <a href="https://www.back4app.com/docs/platform/parse-cloud-code" target="_blank" rel="noopener">Back4App Cloud Code</a> — a small server-side function checks the party password and only then releases the address, date/time, and parking info, so none of it ever sits in this site's public GitHub code
+        </li>
+        <li>
+          <strong>coded in</strong>
+          <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a>
+        </li>
+        <li>
+          <strong>illustrated in</strong>
+          <a href="https://www.adobe.com/products/fresco.html" target="_blank" rel="noopener">Adobe Fresco</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 
 </body>
 </html>

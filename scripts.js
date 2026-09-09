@@ -55,6 +55,7 @@ document.querySelector('#btn-back').addEventListener('click', function () {
 var passwordForm = document.querySelector('#password-form');
 var passwordInput = document.querySelector('#party-password');
 var passwordError = document.querySelector('#password-error');
+var passwordStatus = document.querySelector('#password-status');
 var unlockBtn = document.querySelector('#btn-unlock');
 
 function fillText(id, value) {
@@ -89,6 +90,80 @@ function applySecrets(secrets) {
   fillText('datetime-text', secrets.datetime || '');
   fillText('phone-text', secrets.phone || '');
   renderParkingCards(secrets.parking);
+  document.querySelector('#calendar-link').href = buildCalendarLink(secrets);
+  startCountdown(secrets.eventStartISO);
+}
+
+// ============ add to calendar ============
+function padTwoDigits(n) {
+  return n < 10 ? '0' + n : '' + n;
+}
+
+function toGCalDateFormat(isoString) {
+  var d = new Date(isoString);
+  return d.getUTCFullYear() + padTwoDigits(d.getUTCMonth() + 1) + padTwoDigits(d.getUTCDate()) +
+    'T' + padTwoDigits(d.getUTCHours()) + padTwoDigits(d.getUTCMinutes()) + padTwoDigits(d.getUTCSeconds()) + 'Z';
+}
+
+function buildCalendarLink(secrets) {
+  if (!secrets.eventStartISO || !secrets.eventEndISO) return '#';
+  var start = toGCalDateFormat(secrets.eventStartISO);
+  var end = toGCalDateFormat(secrets.eventEndISO);
+  var text = encodeURIComponent('Housewarming');
+  var details = encodeURIComponent("Zahra's housewarming — see you there!");
+  var location = encodeURIComponent((secrets.venue || '') + ', ' + (secrets.address || ''));
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + text +
+    '&dates=' + start + '/' + end + '&details=' + details + '&location=' + location;
+}
+
+// ============ copy address ============
+var copyAddressBtn = document.querySelector('#copy-address-btn');
+
+function restoreCopyLabel(originalLabel) {
+  copyAddressBtn.textContent = originalLabel;
+}
+
+function showCopiedFeedback() {
+  var originalLabel = copyAddressBtn.textContent;
+  copyAddressBtn.textContent = 'copied!';
+  setTimeout(restoreCopyLabel.bind(null, originalLabel), 1500);
+}
+
+function handleCopyAddress() {
+  if (!partySecrets) return;
+  var text = (partySecrets.venue || '') + ', ' + (partySecrets.address || '');
+  navigator.clipboard.writeText(text).then(showCopiedFeedback, showCopiedFeedback);
+}
+copyAddressBtn.addEventListener('click', handleCopyAddress);
+
+// ============ live countdown ============
+var countdownEl = document.querySelector('#countdown-text');
+var countdownInterval = null;
+
+function updateCountdown(targetISO) {
+  var target = new Date(targetISO).getTime();
+  var now = Date.now();
+  var diff = target - now;
+
+  if (diff <= 0) {
+    countdownEl.textContent = "it's happening now!";
+    clearInterval(countdownInterval);
+    return;
+  }
+
+  var days = Math.floor(diff / 86400000);
+  var hours = Math.floor((diff % 86400000) / 3600000);
+  var minutes = Math.floor((diff % 3600000) / 60000);
+  var seconds = Math.floor((diff % 60000) / 1000);
+  countdownEl.textContent = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's until the party';
+}
+
+function startCountdown(targetISO) {
+  if (!targetISO) return;
+  countdownEl.hidden = false;
+  updateCountdown(targetISO);
+  if (countdownInterval) clearInterval(countdownInterval);
+  countdownInterval = setInterval(updateCountdown.bind(null, targetISO), 1000);
 }
 
 async function handlePasswordSubmit(event) {
@@ -97,6 +172,7 @@ async function handlePasswordSubmit(event) {
   if (!password) return;
 
   passwordError.hidden = true;
+  passwordStatus.hidden = false;
   unlockBtn.disabled = true;
   unlockBtn.textContent = 'checking…';
 
@@ -113,12 +189,47 @@ async function handlePasswordSubmit(event) {
     passwordError.hidden = false;
     console.error('Password check failed:', err);
   } finally {
+    passwordStatus.hidden = true;
     unlockBtn.disabled = false;
     unlockBtn.textContent = 'Unlock Invite';
   }
 }
 
 passwordForm.addEventListener('submit', handlePasswordSubmit);
+
+// ============ show/hide password ============
+var passwordToggle = document.querySelector('#password-toggle');
+var passwordToggleIcon = document.querySelector('#password-toggle-icon');
+
+function togglePasswordVisibility() {
+  var isHidden = passwordInput.type === 'password';
+  passwordInput.type = isHidden ? 'text' : 'password';
+  passwordToggleIcon.classList.toggle('fa-eye', !isHidden);
+  passwordToggleIcon.classList.toggle('fa-eye-slash', isHidden);
+  passwordToggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+}
+passwordToggle.addEventListener('click', togglePasswordVisibility);
+
+// ============ colophon modal ============
+var colophonTrigger = document.querySelector('#colophon-trigger');
+var colophonOverlay = document.querySelector('#colophon-overlay');
+var colophonClose = document.querySelector('#colophon-close');
+
+function openColophon() {
+  colophonOverlay.hidden = false;
+}
+function closeColophon() {
+  colophonOverlay.hidden = true;
+}
+
+colophonTrigger.addEventListener('click', openColophon);
+colophonClose.addEventListener('click', closeColophon);
+colophonOverlay.addEventListener('click', function (event) {
+  if (event.target === colophonOverlay) closeColophon();
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'Escape' && !colophonOverlay.hidden) closeColophon();
+});
 
 // ============ attending toggle ============
 var attendingInput = document.querySelector('#attending');
@@ -212,6 +323,7 @@ async function handleSubmit(event) {
       thanksTitle.textContent = "Can't wait to see you there " + name.split(' ')[0] + '!';
       thanksSubtitle.textContent = "we're going to have a great time!";
       thanksExtra.hidden = false;
+      burstConfetti();
     } else {
       thanksIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
       thanksTitle.textContent = "I'm sorry that we'll miss you " + name.split(' ')[0];
@@ -245,4 +357,30 @@ illustrationImg.addEventListener('error', showIllustrationPlaceholder);
 // script ran and attached the listener above, so check directly too
 if (illustrationImg.complete && illustrationImg.naturalWidth === 0) {
   showIllustrationPlaceholder();
+}
+
+// ============ confetti burst on "yes" RSVP ============
+var bubbleLayer = document.querySelector('#bubble-layer');
+var confettiColors = ['#ff5722', '#8b5cf6', '#15130f', '#ece6d9'];
+
+function removeConfettiPiece(piece) {
+  piece.remove();
+}
+
+function burstConfetti() {
+  var count = 24;
+  for (var i = 0; i < count; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    var size = 8 + Math.random() * 10;
+    piece.style.width = size + 'px';
+    piece.style.height = size + 'px';
+    piece.style.left = (Math.random() * 100) + '%';
+    piece.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+    piece.style.setProperty('--drift', ((Math.random() - 0.5) * 160) + 'px');
+    piece.style.setProperty('--spin', (Math.random() * 720 - 360) + 'deg');
+    piece.style.animationDelay = (Math.random() * 0.3) + 's';
+    bubbleLayer.appendChild(piece);
+    setTimeout(removeConfettiPiece.bind(null, piece), 2200);
+  }
 }

@@ -8,11 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Almendra+Display&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="styles.css">
 <script src="back4app-client.js" defer></script>
 <script src="scripts.js" defer></script>
 </head>
 <body>
+
+  <div id="bubble-layer"></div>
 
   <main class="card" id="card">
 
@@ -27,15 +30,21 @@
 
     <!-- ============ PASSWORD GATE ============ -->
     <section class="view view--password" id="view-password" hidden>
-      <p class="eyebrow">this one's locked</p>
+      <p class="eyebrow">this page is locked for security</p>
       <h2 class="title title--small">enter the password</h2>
-      <p class="subtitle">sent to you by text or email — ask Zahra if you can't find it</p>
+      <p class="subtitle">please use the password sent to you via text or mail</p>
       <form id="password-form">
         <label class="field">
-          <span class="field-label">Password</span>
-          <input type="password" name="password" id="party-password" placeholder="•••••••••" autocomplete="off" required>
+          <span class="field-label"><i class="fa-solid fa-key"></i> Password</span>
+          <div class="password-field">
+            <input type="password" name="password" id="party-password" placeholder="•••••••••" autocomplete="off" required>
+            <button type="button" class="password-toggle" id="password-toggle" aria-label="Show password">
+              <i class="fa-solid fa-eye" id="password-toggle-icon"></i>
+            </button>
+          </div>
         </label>
         <button type="submit" class="btn btn-primary" id="btn-unlock">Unlock Invite</button>
+        <p class="form-status" id="password-status" hidden>checking with the database…</p>
         <p class="form-error" id="password-error" hidden>hmm, that's not it — try again.</p>
       </form>
     </section>
@@ -59,7 +68,13 @@
         <p class="venue" id="venue-text">loading…</p>
         <p class="address" id="address-text"></p>
         <p class="datetime" id="datetime-text"></p>
+        <div class="detail-actions">
+          <button type="button" class="detail-action" id="copy-address-btn">copy address</button>
+          <a class="detail-action" id="calendar-link" href="#" target="_blank" rel="noopener">add to calendar</a>
+        </div>
       </div>
+
+      <p class="countdown" id="countdown-text" hidden></p>
 
       <p class="note">a vegan fall themed main dish will be served! feel free to bring an appetizers to share! vegetarian is perferred.</p>
 
@@ -153,8 +168,42 @@
   </main>
 
   <footer class="site-footer">
-    <a href="https://www.zahrabaxi.com/" target="_blank" rel="noopener" class="footer-byline-name">made with ♥ by zahra baxi</a>
+    <button type="button" class="footer-byline-name" id="colophon-trigger">made with ♥ by zahra baxi</button>
   </footer>
+
+  <div class="colophon-overlay" id="colophon-overlay" hidden>
+    <div class="colophon-box">
+      <button type="button" class="colophon-close" id="colophon-close" aria-label="Close">&times;</button>
+      <p class="eyebrow">colophon</p>
+      <h2 class="title title--small">how this was made</h2>
+      <ul class="colophon-list">
+        <li>
+          <strong>made by</strong>
+          <a href="https://www.zahrabaxi.com/" target="_blank" rel="noopener">Zahra Baxi</a>
+        </li>
+        <li>
+          <strong>built with</strong>
+          plain <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener">HTML</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener">CSS</a> &amp; <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a> — no frameworks
+        </li>
+        <li>
+          <strong>data &amp; RSVPs</strong>
+          stored with <a href="https://www.back4app.com/" target="_blank" rel="noopener">Back4App</a>, a hosted Parse Server backend
+        </li>
+        <li>
+          <strong>kept out of the public repo</strong>
+          using <a href="https://www.back4app.com/docs/platform/parse-cloud-code" target="_blank" rel="noopener">Back4App Cloud Code</a> — a small server-side function checks the party password and only then releases the address, date/time, and parking info, so none of it ever sits in this site's public GitHub code
+        </li>
+        <li>
+          <strong>coded in</strong>
+          <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a>
+        </li>
+        <li>
+          <strong>illustrated in</strong>
+          <a href="https://www.adobe.com/products/fresco.html" target="_blank" rel="noopener">Adobe Fresco</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 
 </body>
 </html>

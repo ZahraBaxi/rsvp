@@ -187,3 +187,24 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+
+// ---------------- colophon modal ----------------
+var colophonTrigger = document.querySelector('#colophon-trigger');
+var colophonOverlay = document.querySelector('#colophon-overlay');
+var colophonClose = document.querySelector('#colophon-close');
+
+function openColophon() {
+  colophonOverlay.hidden = false;
+}
+function closeColophon() {
+  colophonOverlay.hidden = true;
+}
+
+colophonTrigger.addEventListener('click', openColophon);
+colophonClose.addEventListener('click', closeColophon);
+colophonOverlay.addEventListener('click', function (event) {
+  if (event.target === colophonOverlay) closeColophon();
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'Escape' && !colophonOverlay.hidden) closeColophon();
+});
