@@ -166,7 +166,7 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 440px;
+  max-width: 500px;
   background: var(--cream);
   border: 3px solid var(--ink);
   border-radius: var(--radius-lg);
@@ -191,12 +191,12 @@ body {
 
 .script-line {
   font-family: var(--font-script);
-  font-style: italic;
+  /* font-style: italic; */
   font-size: 15px;
   color: var(--ink-soft);
   margin: 0;
 }
-.script-line--sub { margin: 4px 0 20px; }
+.script-line--sub { margin: 4px 0 4px; }
 
 .headline {
   font-family: var(--font-headline);
