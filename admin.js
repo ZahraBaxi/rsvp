@@ -117,12 +117,12 @@ function renderTable(rows) {
   for (var i = 0; i < rows.length; i++) {
     var r = rows[i];
     html += '<tr data-id="' + r.objectId + '">' +
-      '<td>' + escapeHtml(r.name || '—') + '</td>' +
-      '<td>' + escapeHtml(r.email || '—') + '</td>' +
-      '<td>' + (r.attending === 'yes' ? '<span class="pill-yes">yes 🎉</span>' : '<span class="pill-no">no</span>') + '</td>' +
-      '<td>' + (r.attending === 'yes' ? (r.guests != null ? r.guests : 1) : '—') + '</td>' +
-      '<td>' + escapeHtml(r.notes || '—') + '</td>' +
-      '<td>' + formatDate(r.createdAt) + '</td>' +
+      '<td data-label="name">' + escapeHtml(r.name || '—') + '</td>' +
+      '<td data-label="email">' + escapeHtml(r.email || '—') + '</td>' +
+      '<td data-label="coming?">' + (r.attending === 'yes' ? '<span class="pill-yes">yes 🎉</span>' : '<span class="pill-no">no</span>') + '</td>' +
+      '<td data-label="guests">' + (r.attending === 'yes' ? (r.guests != null ? r.guests : 1) : '—') + '</td>' +
+      '<td data-label="notes">' + escapeHtml(r.notes || '—') + '</td>' +
+      '<td data-label="sent">' + formatDate(r.createdAt) + '</td>' +
       '<td><button class="x-btn" data-delete-rsvp="' + r.objectId + '" data-name="' + escapeHtml(r.name || 'this response') + '" aria-label="Remove response">×</button></td>' +
       '</tr>';
   }
@@ -195,9 +195,11 @@ var colophonClose = document.querySelector('#colophon-close');
 
 function openColophon() {
   colophonOverlay.hidden = false;
+  document.body.classList.add('modal-open');
 }
 function closeColophon() {
   colophonOverlay.hidden = true;
+  document.body.classList.remove('modal-open');
 }
 
 colophonTrigger.addEventListener('click', openColophon);

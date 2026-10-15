@@ -166,7 +166,7 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 500px;
+  max-width: 440px;
   background: var(--cream);
   border: 3px solid var(--ink);
   border-radius: var(--radius-lg);
@@ -191,12 +191,12 @@ body {
 
 .script-line {
   font-family: var(--font-script);
-  /* font-style: italic; */
+  font-style: italic;
   font-size: 15px;
   color: var(--ink-soft);
   margin: 0;
 }
-.script-line--sub { margin: 4px 0 4px; }
+.script-line--sub { margin: 4px 0 20px; }
 
 .headline {
   font-family: var(--font-headline);
@@ -724,7 +724,164 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
   line-height: 1.8;
 }
 
+/* ============================================================
+   touch & small-screen refinements
+   (kept together at the end so the phone-specific decisions are
+   easy to find; they override the desktop-first rules above)
+   ============================================================ */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: max(28px, env(safe-area-inset-top));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: max(28px, env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+  -webkit-tap-highlight-color: transparent;
+}
+/* scroll lock while the colophon modal is open */
+body.modal-open { overflow: hidden; }
+
+/* no double-tap-to-zoom delay on anything tappable */
+button, a, summary, [role="button"], input, textarea {
+  touch-action: manipulation;
+}
+
+/* nicer line breaks on narrow screens (no lonely last word) */
+.venue, .note, .title, .subtitle, .script-line {
+  text-wrap: balance;
+}
+
+/* --- form fields ---------------------------------------------
+   16px stops iOS Safari zooming the page when a field is focused;
+   ~48px tall so they're easy to hit with a thumb. */
+input[type="text"], input[type="email"], input[type="password"], textarea {
+  font-size: 16px;
+  padding: 13px 14px;
+}
+textarea { min-height: 104px; }
+input::placeholder, textarea::placeholder { font-size: 13px; }
+
+/* password show/hide: a full-height 52px tap target inside the field */
+.password-field input[type="password"],
+.password-field input[type="text"] { padding-right: 58px; }
+.password-toggle {
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  width: 52px;
+  transform: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* --- buttons & tap targets (aim: 44px+) ----------------------- */
+.btn { min-height: 48px; }
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px 0 0;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.toggle-btn { min-height: 48px; font-size: 13px; }
+
+.stepper { gap: 12px; padding: 5px 8px; }
+.stepper-btn { width: 44px; height: 44px; font-size: 20px; }
+.stepper-value { min-width: 36px; font-size: 18px; }
+
+.site-footer { margin-top: 0; }
+.footer-byline-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 12px;
+}
+
+.detail-actions { flex-wrap: wrap; gap: 4px 8px; margin-top: 6px; }
+.detail-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 10px;
+  font-size: 11.5px;
+}
+
+.info-accordion summary { min-height: 52px; }
+.info-link { min-height: 44px; font-size: 12px; }
+
+/* --- maps: don't let a finger on the map hijack page scrolling.
+   On touch screens the map is a static picture; the "view on Google
+   Maps" link underneath is the way to explore it. */
+.info-map { height: 160px; }
+@media (hover: none) {
+  .info-map iframe { pointer-events: none; }
+}
+
+/* --- colophon modal on phones -------------------------------- */
+.colophon-overlay {
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+.colophon-box {
+  max-height: 85vh;
+  max-height: 85dvh;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.colophon-close {
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+.colophon-box .title { padding-right: 48px; }
+.colophon-list li { line-height: 1.7; }
+/* standalone credit links get a full-size tap target; links inside
+   sentences stay inline so line spacing remains even */
+.colophon-list a.link-row {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* --- phones ---------------------------------------------------- */
 @media (max-width: 480px) {
   .card { padding: 36px 24px 30px; }
+  .headline { font-size: 40px; }
+
+  /* small print gets a little bigger so it's readable at arm's length */
+  .eyebrow { font-size: 12px; }
+  .script-line { font-size: 16px; }
+  .subtitle, .note { font-size: 14px; }
+  .address, .datetime { font-size: 13.5px; }
+  .envelope-hint { font-size: 13px; }
+  .field-hint { font-size: 12px; }
+  .form-error, .form-status { font-size: 13px; }
+  .info-card-text, .info-card-address, .info-list, .colophon-list li { font-size: 13px; }
+  .info-warning { font-size: 12.5px; }
+  .illustration-placeholder .hint { font-size: 12px; }
+}
+
+/* --- very small phones (iPhone SE / 320-360px) ---------------- */
+@media (max-width: 360px) {
+  body {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  .card { padding: 32px 18px 26px; box-shadow: 5px 5px 0 var(--shadow); }
   .headline { font-size: 34px; }
+  input::placeholder, textarea::placeholder { font-size: 12px; }
+  .toggle-group { gap: 8px; }
 }

@@ -12,6 +12,7 @@ function showView(view) {
     ALL_VIEWS[i].hidden = true;
   }
   view.hidden = false;
+  window.scrollTo(0, 0);
 }
 
 // holds the secret party details once the password has been
@@ -30,7 +31,11 @@ function openIllustratedEnvelope() {
     showView(viewPassword);
     viewHome.classList.remove('is-leaving');
     envelopeIllustration.classList.remove('is-open');
-    document.querySelector('#party-password').focus();
+    // on phones, focusing would raise the keyboard over the screen before
+    // anyone has read it, so only auto-focus where there's a real pointer
+    if (!window.matchMedia('(hover: none)').matches) {
+      document.querySelector('#party-password').focus();
+    }
   }, 500);
 }
 
@@ -91,7 +96,7 @@ function applySecrets(secrets) {
   fillText('phone-text', secrets.phone || '');
   renderParkingCards(secrets.parking);
   document.querySelector('#calendar-link').href = buildCalendarLink(secrets);
-  startCountdown(secrets.eventStartISO);
+  startCountdown(secrets.eventStartISO, secrets.eventEndISO);
 }
 
 // ============ add to calendar ============
@@ -140,14 +145,19 @@ copyAddressBtn.addEventListener('click', handleCopyAddress);
 var countdownEl = document.querySelector('#countdown-text');
 var countdownInterval = null;
 
-function updateCountdown(targetISO) {
+function updateCountdown(targetISO, endISO) {
   var target = new Date(targetISO).getTime();
   var now = Date.now();
   var diff = target - now;
 
   if (diff <= 0) {
-    countdownEl.textContent = "it's happening now!";
     clearInterval(countdownInterval);
+    var isOver = endISO && now >= new Date(endISO).getTime();
+    if (isOver) {
+      countdownEl.hidden = true;
+    } else {
+      countdownEl.textContent = "it's happening now!";
+    }
     return;
   }
 
@@ -158,12 +168,12 @@ function updateCountdown(targetISO) {
   countdownEl.textContent = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's until the party';
 }
 
-function startCountdown(targetISO) {
+function startCountdown(targetISO, endISO) {
   if (!targetISO) return;
   countdownEl.hidden = false;
-  updateCountdown(targetISO);
+  updateCountdown(targetISO, endISO);
   if (countdownInterval) clearInterval(countdownInterval);
-  countdownInterval = setInterval(updateCountdown.bind(null, targetISO), 1000);
+  countdownInterval = setInterval(updateCountdown.bind(null, targetISO, endISO), 1000);
 }
 
 async function handlePasswordSubmit(event) {
@@ -217,9 +227,11 @@ var colophonClose = document.querySelector('#colophon-close');
 
 function openColophon() {
   colophonOverlay.hidden = false;
+  document.body.classList.add('modal-open');
 }
 function closeColophon() {
   colophonOverlay.hidden = true;
+  document.body.classList.remove('modal-open');
 }
 
 colophonTrigger.addEventListener('click', openColophon);

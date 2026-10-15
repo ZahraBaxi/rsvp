@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zahra's Housewarming RSVP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Home Sweet Home — Housewarming RSVP</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +37,7 @@
         <label class="field">
           <span class="field-label"><i class="fa-solid fa-key"></i> Password</span>
           <div class="password-field">
-            <input type="password" name="password" id="party-password" placeholder="•••••••••" autocomplete="off" required>
+            <input type="password" name="password" id="party-password" placeholder="•••••••••" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required>
             <button type="button" class="password-toggle" id="password-toggle" aria-label="Show password">
               <i class="fa-solid fa-eye" id="password-toggle-icon"></i>
             </button>
@@ -51,14 +51,16 @@
 
     <!-- ============ INVITE VIEW ============ -->
     <section class="view view--invite" id="view-invite" hidden>
-      <p class="script-line">you're invited to zahra's...</p>
-      <h1 class="headline">HOUSEWARMING!4</h1>
-      <p class="script-line script-line--sub">───  ✧.*｡⋆ ✦₊⁺ ───</p>
+      <p class="script-line">please join for a</p>
+      <h1 class="headline">Housewarming</h1>
+      <p class="script-line script-line--sub">at zahra's new place</p>
 
       <div class="illustration-slot" id="illustration-slot">
         <img src="illustration.png" alt="Hand-drawn illustration" id="illustration-img">
         <div class="illustration-placeholder" id="illustration-placeholder" hidden>
           <span class="plus">+</span>
+          <p>add your illustration</p>
+          <p class="hint">drop a file named illustration.png in this folder — furry friends gathering, anything you like</p>
         </div>
       </div>
 
@@ -74,7 +76,7 @@
 
       <p class="countdown" id="countdown-text" hidden></p>
 
-      <p class="note">a vegan fall themed main dish will be served! feel free to bring an appetizer to share! vegetarian is perferred.</p>
+      <p class="note">a vegan fall themed main dish will be served! feel free to bring an appetizers to share! vegetarian is perferred.</p>
 
       <button class="btn btn-primary" id="btn-show-form">Count Me In</button>
     </section>
@@ -87,12 +89,12 @@
       <form id="rsvp-form" novalidate>
         <label class="field">
           <span class="field-label">Your Name</span>
-          <input type="text" name="name" id="name" placeholder="e.g. Bilbo Baggins" required>
+          <input type="text" name="name" id="name" placeholder="e.g. Bilbo Baggins" autocomplete="name" autocapitalize="words" required>
         </label>
 
         <label class="field">
           <span class="field-label">Your Email</span>
-          <input type="email" name="email" id="email" placeholder="bilbo.of.the.shire@example.com">
+          <input type="email" name="email" id="email" placeholder="bilbo.of.the.shire@example.com" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false">
           <span class="field-hint">for contact in case anything about the party changes</span>
         </label>
 
@@ -156,6 +158,7 @@
               <li>street parking nearby is limited, so carpooling helps! if you need help knowing who to carpool with i can connect you with people who may be heading from the same direction.</li>
               <li>text/call when you're close so the gate's ready for you</li>
               <li>please note this is a shoes-off household. wear something easy to slip on and off!</li>
+              <li>consider bringing a chair/stool if you would like to sit at the dining table. my apartment is a small studio and i have a limited amount of chairs/seating to share.</li>
             </ul>
           </div>
         </details>
@@ -176,7 +179,7 @@
       <ul class="colophon-list">
         <li>
           <strong>made by</strong>
-          <a href="https://www.zahrabaxi.com/" target="_blank" rel="noopener">Zahra Baxi</a>
+          <a class="link-row" href="https://www.zahrabaxi.com/" target="_blank" rel="noopener">Zahra Baxi</a>
         </li>
         <li>
           <strong>built with</strong>
@@ -192,11 +195,11 @@
         </li>
         <li>
           <strong>coded in</strong>
-          <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a>
+          <a class="link-row" href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a>
         </li>
         <li>
           <strong>illustrated in</strong>
-          <a href="https://www.adobe.com/products/fresco.html" target="_blank" rel="noopener">Adobe Fresco</a>
+          <a class="link-row" href="https://www.adobe.com/products/fresco.html" target="_blank" rel="noopener">Adobe Fresco</a>
         </li>
       </ul>
     </div>

@@ -175,3 +175,62 @@
   font-style: italic;
   list-style: none;
 }
+
+/* ---------- phones ---------- */
+@media (max-width: 600px) {
+  .dashboard { padding: 24px 16px 28px; margin: 8px auto; box-shadow: 5px 5px 0 var(--shadow); }
+  .dashboard-header { align-items: center; }
+  .stats { gap: 8px; margin-bottom: 20px; }
+  .panel-header { flex-wrap: wrap; }
+  .panel-actions { flex-wrap: wrap; }
+  .btn-inline { min-height: 44px; }
+  .panel-note { text-align: left; }
+  .x-btn { width: 40px; height: 40px; font-size: 18px; }
+  /* the 7-column table can't fit a phone, so each response becomes a card:
+     label on the left, value on the right, delete button in the corner */
+  .table-wrap { border: none; overflow: visible; }
+  .rsvp-table { background: transparent; }
+  .rsvp-table, .rsvp-table tbody, .rsvp-table tr, .rsvp-table td { display: block; width: 100%; }
+  .rsvp-table thead { display: none; }
+  .rsvp-table tr {
+    position: relative;
+    background: var(--white);
+    border: 2.5px solid var(--ink);
+    margin-bottom: 12px;
+    padding: 6px 0;
+  }
+  .rsvp-table tr:last-child { margin-bottom: 0; }
+  .rsvp-table td {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    padding: 6px 14px;
+    border: none;
+    word-break: break-word;
+  }
+  .rsvp-table td::before {
+    content: attr(data-label);
+    flex: 0 0 64px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .rsvp-table td.empty-row { display: block; border: none; }
+  .rsvp-table td.empty-row::before { content: none; }
+  .rsvp-table tr:has(td.empty-row) { border: none; padding: 0; }
+  .rsvp-table td:last-child:not(.empty-row) {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: auto;
+    padding: 0;
+  }
+  .rsvp-table td:last-child:not(.empty-row)::before { content: none; }
+  /* keep the first two rows clear of the corner delete button */
+  .rsvp-table td[data-label="name"],
+  .rsvp-table td[data-label="email"] { padding-right: 56px; }
+  .rsvp-table td[data-label="name"] { font-weight: 700; }
+}
