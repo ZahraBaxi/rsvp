@@ -68,24 +68,43 @@ function fillText(id, value) {
   if (el) el.textContent = value;
 }
 
+// builds one place card: title, address, optional note, map, Google Maps link.
+// the party address and every parking option use this, so they always match.
+function buildPlaceCard(place) {
+  return '<div class="info-card">' +
+    '<p class="info-card-title">' + place.title + '</p>' +
+    '<p class="info-card-address">' + place.address + '</p>' +
+    (place.text ? '<p class="info-card-text">' + place.text + '</p>' : '') +
+    (place.mapUrl ? '<div class="info-map"><iframe src="' + place.mapUrl + '" loading="lazy" title="Map of ' + place.title + '"></iframe></div>' : '') +
+    (place.googleMapsUrl ? '<a class="info-link info-link--pin" href="' + place.googleMapsUrl + '" target="_blank" rel="noopener">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-7.58-7-12a7 7 0 0 1 14 0c0 4.42-7 12-7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>' +
+      'view on Google Maps</a>' : '') +
+    '</div>';
+}
+
 function renderParkingCards(parking) {
   var container = document.querySelector('#parking-cards');
   if (!container || !parking) return;
 
   var html = '';
   for (var i = 0; i < parking.length; i++) {
-    var spot = parking[i];
-    html += '<div class="info-card">' +
-      '<p class="info-card-title">' + spot.title + '</p>' +
-      '<p class="info-card-address">' + spot.address + '</p>' +
-      '<p class="info-card-text">' + spot.text + '</p>' +
-      (spot.mapUrl ? '<div class="info-map"><iframe src="' + spot.mapUrl + '" loading="lazy" title="Map of ' + spot.title + '"></iframe></div>' : '') +
-      (spot.googleMapsUrl ? '<a class="info-link info-link--pin" href="' + spot.googleMapsUrl + '" target="_blank" rel="noopener">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-7.58-7-12a7 7 0 0 1 14 0c0 4.42-7 12-7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>' +
-        'view on Google Maps</a>' : '') +
-      '</div>';
+    html += buildPlaceCard(parking[i]);
   }
   container.innerHTML = html;
+}
+
+// the party address, shown again on the thank-you screen above the parking
+function renderVenueCard(secrets) {
+  var container = document.querySelector('#venue-card');
+  if (!container) return;
+
+  container.innerHTML = buildPlaceCard({
+    title: secrets.venueName || 'Where to find us',
+    address: secrets.address || '',
+    text: secrets.venueText || '',
+    mapUrl: secrets.venueMapUrl,
+    googleMapsUrl: secrets.venueGoogleMapsUrl
+  });
 }
 
 function applySecrets(secrets) {
@@ -94,6 +113,7 @@ function applySecrets(secrets) {
   fillText('address-text', secrets.address || '');
   fillText('datetime-text', secrets.datetime || '');
   fillText('phone-text', secrets.phone || '');
+  renderVenueCard(secrets);
   renderParkingCards(secrets.parking);
   document.querySelector('#calendar-link').href = buildCalendarLink(secrets);
   startCountdown(secrets.eventStartISO, secrets.eventEndISO);

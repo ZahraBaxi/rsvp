@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Home Sweet Home — Housewarming RSVP</title>
+<title>you're invited!</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,20 +45,22 @@
         </label>
         <button type="submit" class="btn btn-primary" id="btn-unlock">Unlock Invite</button>
         <p class="form-status" id="password-status" hidden>checking with the database…</p>
-        <p class="form-error" id="password-error" hidden>hmm, that's not it — try again.</p>
+        <p class="form-error" id="password-error" hidden>hmm, that's not it, try again.</p>
       </form>
     </section>
 
     <!-- ============ INVITE VIEW ============ -->
     <section class="view view--invite" id="view-invite" hidden>
       <p class="script-line">please join for a</p>
-      <h1 class="headline">Housewarming</h1>
+      <h1 class="headline">HOUSEWARMING</h1>
       <p class="script-line script-line--sub">at zahra's new place</p>
 
       <div class="illustration-slot" id="illustration-slot">
         <img src="illustration.png" alt="Hand-drawn illustration" id="illustration-img">
         <div class="illustration-placeholder" id="illustration-placeholder" hidden>
           <span class="plus">+</span>
+          <p>add your illustration</p>
+          <p class="hint">drop a file named illustration.png in this folder — furry friends gathering, anything you like</p>
         </div>
       </div>
 
@@ -132,6 +134,13 @@
       <p class="subtitle" id="thanks-subtitle">can't wait to show you around the new place</p>
 
       <div class="thanks-extra" id="thanks-extra" hidden>
+        <details class="info-accordion" open>
+          <summary>the address</summary>
+          <div class="info-content">
+            <div id="venue-card"></div>
+          </div>
+        </details>
+
         <details class="info-accordion">
           <summary>parking options</summary>
           <div class="info-content">
@@ -181,15 +190,11 @@
         </li>
         <li>
           <strong>built with</strong>
-          plain <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener">HTML</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener">CSS</a> &amp; <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a> — no frameworks
+          plain <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener">HTML</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener">CSS</a> &amp; <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a>
         </li>
         <li>
-          <strong>data &amp; RSVPs</strong>
-          stored with <a href="https://www.back4app.com/" target="_blank" rel="noopener">Back4App</a>, a hosted Parse Server backend
-        </li>
-        <li>
-          <strong>kept out of the public repo</strong>
-          using <a href="https://www.back4app.com/docs/platform/parse-cloud-code" target="_blank" rel="noopener">Back4App Cloud Code</a> — a small server-side function checks the party password and only then releases the address, date/time, and parking info, so none of it ever sits in this site's public GitHub code
+          <strong>database storage</strong>
+          using <a href="https://www.back4app.com/" target="_blank" rel="noopener">Back4App Cloud Code</a>, using cloudcode keeps information secure so none of it ever sits in this site's public GitHub code
         </li>
         <li>
           <strong>coded in</strong>
