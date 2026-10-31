@@ -62,6 +62,7 @@ var passwordInput = document.querySelector('#party-password');
 var passwordError = document.querySelector('#password-error');
 var passwordStatus = document.querySelector('#password-status');
 var unlockBtn = document.querySelector('#btn-unlock');
+var unlockInfoBtn = document.querySelector('#btn-unlock-info');
 
 function fillText(id, value) {
   var el = document.querySelector('#' + id);
@@ -115,7 +116,10 @@ function applySecrets(secrets) {
   fillText('phone-text', secrets.phone || '');
   renderVenueCard(secrets);
   renderParkingCards(secrets.parking);
-  document.querySelector('#calendar-link').href = buildCalendarLink(secrets);
+  var calendarHref = buildCalendarLink(secrets);
+  document.querySelector('#calendar-link').href = calendarHref;
+  document.querySelector('#info-calendar-link').href = calendarHref;
+  fillText('info-when-text', secrets.datetime || '');
   startCountdown(secrets.eventStartISO, secrets.eventEndISO);
 }
 
@@ -196,15 +200,23 @@ function startCountdown(targetISO, endISO) {
   countdownInterval = setInterval(updateCountdown.bind(null, targetISO, endISO), 1000);
 }
 
-async function handlePasswordSubmit(event) {
-  event.preventDefault();
+var UNLOCK_LABEL = 'Unlock Invite';
+var UNLOCK_INFO_LABEL = "Already RSVP'd? See the info";
+
+// checks the password with Cloud Code, then sends the guest either to the
+// invite ('invite', for new guests) or straight to the important info
+// ('info', for guests who already RSVP'd). Both need the password.
+async function unlockWith(destination) {
   var password = passwordInput.value;
   if (!password) return;
+
+  var clickedBtn = destination === 'info' ? unlockInfoBtn : unlockBtn;
 
   passwordError.hidden = true;
   passwordStatus.hidden = false;
   unlockBtn.disabled = true;
-  unlockBtn.textContent = 'checking…';
+  unlockInfoBtn.disabled = true;
+  clickedBtn.textContent = 'checking…';
 
   try {
     // getPartyDetails is a Back4App Cloud Code function — see the
@@ -213,7 +225,11 @@ async function handlePasswordSubmit(event) {
     // none of that ever lives in this public repo.
     var secrets = await callCloudFunction('getPartyDetails', { password: password });
     applySecrets(secrets);
-    showView(viewInvite);
+    if (destination === 'info') {
+      showInfoScreen();
+    } else {
+      showView(viewInvite);
+    }
   } catch (err) {
     passwordError.textContent = "hmm, that's not it — try again.";
     passwordError.hidden = false;
@@ -221,11 +237,26 @@ async function handlePasswordSubmit(event) {
   } finally {
     passwordStatus.hidden = true;
     unlockBtn.disabled = false;
-    unlockBtn.textContent = 'Unlock Invite';
+    unlockInfoBtn.disabled = false;
+    unlockBtn.textContent = UNLOCK_LABEL;
+    unlockInfoBtn.textContent = UNLOCK_INFO_LABEL;
   }
 }
 
+function handlePasswordSubmit(event) {
+  event.preventDefault();
+  unlockWith('invite');
+}
+
+function handleInfoUnlock() {
+  // this button isn't a submit button, so run the browser's own
+  // "please fill out this field" check by hand
+  if (!passwordForm.reportValidity()) return;
+  unlockWith('info');
+}
+
 passwordForm.addEventListener('submit', handlePasswordSubmit);
+unlockInfoBtn.addEventListener('click', handleInfoUnlock);
 
 // ============ show/hide password ============
 var passwordToggle = document.querySelector('#password-toggle');
@@ -319,6 +350,30 @@ var thanksTitle = document.querySelector('#thanks-title');
 var thanksSubtitle = document.querySelector('#thanks-subtitle');
 var thanksExtra = document.querySelector('#thanks-extra');
 
+// the thank-you screen has two modes: right after an RSVP, and "welcome
+// back" for guests who already RSVP'd and just need the important info
+var infoWhen = document.querySelector('#info-when');
+var infoBackBtn = document.querySelector('#btn-info-back');
+
+function setThanksMode(mode) {
+  var isInfo = mode === 'info';
+  thanksIcon.hidden = isInfo;
+  infoWhen.hidden = !isInfo;
+  infoBackBtn.hidden = !isInfo;
+}
+
+function showInfoScreen() {
+  setThanksMode('info');
+  thanksTitle.textContent = 'Welcome back!';
+  thanksSubtitle.textContent = "here's everything you need for the party";
+  thanksExtra.hidden = false;
+  showView(viewThanks);
+}
+
+infoBackBtn.addEventListener('click', function () {
+  showView(viewInvite);
+});
+
 var RSVP_CLASS = 'HousewarmingRSVP';
 
 async function handleSubmit(event) {
@@ -362,6 +417,7 @@ async function handleSubmit(event) {
       thanksSubtitle.textContent = "thanks for letting me know. i hope you can come by sometime soon :)";
       thanksExtra.hidden = true;
     }
+    setThanksMode('rsvp');
     showView(viewThanks);
   } catch (err) {
     formError.textContent = "hmm, that didn't send — check your connection and try again.";
